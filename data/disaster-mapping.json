@@ -2,6 +2,6 @@
   {"id":"heat","name":"폭염","symbol":"☀","elements":["기온","상대습도"],"note":"기온·습도로 현재 상황을 탐구합니다. 체감온도 계산에는 공식 산식과 적용 조건 확인이 필요합니다."},
   {"id":"rain","name":"호우","symbol":"☂","elements":["강수량"],"note":"시간·일·누적 강수량은 서로 다릅니다. 자료의 누적 구간을 확인하세요."},
   {"id":"wind","name":"강풍","symbol":"↗","elements":["풍속","풍향"],"note":"평균풍속과 순간최대풍속을 구분하세요. 관측소 주변 지형도 함께 고려하세요."},
-  {"id":"typhoon","name":"태풍","symbol":"◎","elements":["태풍 중심 위치","이동 경로"],"phenomenon":true,"note":"태풍 중심 위치·진로는 현상 위치 정보입니다. ASOS/AWS 지점번호로 선택하지 않습니다.","url":"https://www.weather.go.kr/w/typhoon/typ-info.do"},
-  {"id":"earthquake","name":"지진","symbol":"⌁","elements":["진앙 좌표","규모","발생시각"],"phenomenon":true,"note":"지진 발생 후의 진앙·규모·발생시각 정보입니다. 발생 시각·위치·규모를 사전에 정확히 예측하는 기능이 아닙니다.","url":"https://www.weather.go.kr/w/eqk-vol/recent-eqk.do"}
+  {"id":"typhoon","name":"태풍","symbol":"◎","elements":["지역 예보의 풍속·풍향","강수량","태풍 진로"],"phenomenon":true,"title":"태풍 진로와 우리 지역의 바람·비를 함께 살펴보세요","note":"태풍의 이동은 태풍정보로, 관심지역의 미래 바람·강수는 격자 예보로, 현재 상황은 인근 관측소 자료로 확인합니다.","url":"https://www.weather.go.kr/w/typhoon/typ-info.do"},
+  {"id":"earthquake","name":"지진","symbol":"⌁","elements":["주변 지진관측소","지역 진도·PGA","지진 발생정보"],"phenomenon":true,"title":"주변 지진관측소로 우리 지역의 흔들림을 살펴보세요","note":"가까운 지진관측소와 지역 진도 정보를 찾아, 지진 발생 후의 흔들림을 비교하는 탐구를 설계해 보세요.","url":"https://neciseew.kma.go.kr/pews/pews2.html"}
 ]

@@ -51,3 +51,15 @@ test('생성 코드에 개인키 대신 환경변수·오류처리 포함',()=>{
     assert.match(code,/timeout=30/); assert.doesNotMatch(code,/print\(response.url\)/);
   }
 });
+test('격자 예보의 API 키·발표시각·페이지 처리 분리',()=>{
+  for(const key of ['GRID_FORECAST','GRID_ULTRA_FORECAST']){
+    const service=services[key], point={nx:60,ny:127};
+    const params=requestParams('GRID',point,service);
+    assert.equal(params.authKey,'YOUR_API_KEY');
+    assert.equal(params.ServiceKey,undefined);assert.equal(params.stn,undefined);
+    assert.equal(params.base_time,key==='GRID_FORECAST'?'0500':'HH30');
+    const code=pythonCode('GRID',point,service);
+    assert.ok(code.includes(service.endpoint));assert.ok(code.includes('KMA_API_KEY'));
+    assert.ok(code.includes('fcstValue'));assert.ok(code.includes('totalCount'));
+  }
+});

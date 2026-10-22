@@ -15,11 +15,38 @@
   <section class="disaster-bar" aria-label="탐구할 재해 선택"><span class="step-label"><b>01</b> 재해·자료</span><div id="disasters" class="disaster-options"></div><span id="elements" class="elements"></span></section>
   <p id="disaster-note" class="context-note"></p>
   <div id="load-status" class="load-status" role="status">기상청 지점정보를 불러오는 중입니다…</div>
-  <section id="phenomenon" class="phenomenon panel" hidden><span class="eyebrow">현상 위치 정보</span><h2 id="phenomenon-title"></h2><p id="phenomenon-note"></p><a id="phenomenon-link" class="primary link-button" target="_blank" rel="noopener noreferrer">기상청 공식 정보 보기 ↗</a><p class="muted">태풍·지진은 관측소 번호를 선택하는 방식과 다릅니다. 이 화면에서는 임의의 진앙이나 태풍 경로를 생성하지 않습니다.</p></section>
+  <section id="phenomenon" class="phenomenon panel" hidden><span class="eyebrow">재해별 자료 선택 가이드</span><h2 id="phenomenon-title"></h2><p id="phenomenon-note"></p><a id="phenomenon-link" class="primary link-button" target="_blank" rel="noopener noreferrer">기상청 공식 정보 보기 ↗</a>
+    <div id="typhoon-guide" hidden>
+      <div class="guidance-cards">
+        <article><span class="eyebrow">1 · 태풍의 이동</span><h3>중심·진로와 영향 시간대 확인</h3><p>태풍정보에서 예상 진로와 영향 시간대를 먼저 찾으세요. 태풍 중심 부근의 최대풍속을 우리 지역의 풍속으로 사용하면 안 됩니다.</p><a href="https://www.weather.go.kr/w/typhoon/typ-info.do" target="_blank" rel="noopener noreferrer">태풍 공식 정보 ↗</a></article>
+        <article><span class="eyebrow">2 · 우리 지역의 미래</span><h3>지역 예보로 바람·강수 분석</h3><p>학교나 관심지역의 위·경도를 격자로 바꾸고 단기예보 또는 초단기예보를 선택하세요. 아래 탐색기에서 예보 요청정보를 복사할 수 있습니다.</p><button id="typhoon-forecast" class="primary">지역 예보 격자 찾기 ↓</button></article>
+        <article><span class="eyebrow">3 · 현재와 비교</span><h3>인근 관측값과 함께 살펴보기</h3><p>ASOS/AWS의 실제 바람·강수 관측값으로 현재 상황을 비교하세요. 관측 시각과 예보 대상 시각을 맞추고, 관측값을 미래 예보로 해석하지 마세요.</p><button id="typhoon-observation" class="secondary">현재 관측소 찾아보기 ↓</button></article>
+      </div>
+      <div class="guide-table-wrap"><table class="guide-table"><caption>지역 위험도 탐구에 사용할 예보 항목</caption><thead><tr><th scope="col">필요한 자료</th><th scope="col">단기예보</th><th scope="col">초단기예보</th><th scope="col">확인할 점</th></tr></thead><tbody><tr><th scope="row">풍속·풍향</th><td>WSD · VEC</td><td>WSD · VEC</td><td>풍속 m/s, 풍향 °. 순간 돌풍과 구분</td></tr><tr><th scope="row">강수량</th><td>PCP</td><td>RN1</td><td>1시간 강수량. 누적 구간·문자 구간값 확인</td></tr><tr><th scope="row">강수확률</th><td>POP</td><td>해당 항목 없음</td><td>확률(%)을 강수량(mm)으로 해석하지 않기</td></tr></tbody></table></div>
+      <p class="guide-caution">발표시각(base_date/base_time)과 예보 대상 시각(fcstDate/fcstTime)은 다릅니다. 같은 격자·대상 시각의 항목을 묶어 분석하고, 범위형 강수값이나 ‘강수없음’을 무조건 숫자로 바꾸지 마세요. 학습용 위험 기준은 공식 태풍·호우·강풍 특보와 구분하세요.</p>
+      <p class="guide-source">출처: <a href="https://apihub.kma.go.kr/apiList.do?seqApi=10&seqApiSub=286" target="_blank" rel="noopener noreferrer">기상청 동네예보 API 명세</a> · 확인일 2026-10-22</p>
+    </div>
+    <div id="earthquake-guide" hidden>
+      <div class="guidance-cards">
+        <article><span class="eyebrow">1 · 주변 지진관측소</span><h3>관심지역 주변 관측소 찾기</h3><p>공식 지진관측망 분포도에서 지역을 찾고, 실시간 지진감시 지도를 확대해 주변 관측소를 확인하세요. 관측소명·코드·위치·운영기관을 자료에 함께 기록하세요.</p><a href="https://www.kma.go.kr/kma/biz/earthquake_volcano_02.jsp" target="_blank" rel="noopener noreferrer">기상청 지진관측망 분포도 ↗</a><a href="https://neciseew.kma.go.kr/pews/pews2.html" target="_blank" rel="noopener noreferrer">실시간 지진감시 지도·관측소별 진도 ↗</a></article>
+        <article><span class="eyebrow">2 · 우리 지역의 흔들림</span><h3>규모보다 진도·관측값 확인</h3><p>규모는 지진 자체의 크기, 진도는 장소별 흔들림 정도입니다. 기상청 지진정보서비스에서 관심지역을 설정하고 관측소별 진도와 제공되는 PGA(최대지반가속도)를 확인하세요.</p><a href="https://neciseew.kma.go.kr/pews/man/m.html" target="_blank" rel="noopener noreferrer">관심지역 설정·진도 화면 사용법 ↗</a></article>
+        <article><span class="eyebrow">3 · 탐구 프로그램 설계</span><h3>한 지점·거리만으로 판단하지 않기</h3><p>같은 지진과 같은 시각의 인근 여러 관측소 자료를 비교하세요. 관측소와 관심지역의 거리, 지반·설치 환경, 결측·지연을 고려하고 공식 지역 진도와 함께 해석하세요.</p><a href="https://www.weather.go.kr/w/eqk-vol/recent-eqk.do" target="_blank" rel="noopener noreferrer">최근 지진 발생정보 ↗</a></article>
+      </div>
+      <div class="guide-table-wrap"><table class="guide-table"><caption>지진 탐구에 모을 정보</caption><thead><tr><th scope="col">정보</th><th scope="col">예시 항목</th><th scope="col">활용</th></tr></thead><tbody><tr><th scope="row">관측소 메타데이터</th><td>지진관측소 코드·좌표·기관·장비 종류</td><td>주변 관측소 선택, 위치·거리 비교</td></tr><tr><th scope="row">지역 흔들림</th><td>관측시각·관측소별 진도·PGA(%g 등)</td><td>발생 후 흔들림 비교. 단위·결측값 확인</td></tr><tr><th scope="row">지진 발생정보</th><td>발생시각·진앙·깊이·규모</td><td>같은 사건의 관측값을 묶어 분석</td></tr></tbody></table></div>
+      <p class="guide-caution">지진관측소는 ASOS/AWS 기상관측소와 별도의 관측망입니다. 이 앱의 기상 지점번호를 지진관측소 코드로 사용하지 마세요. 현재 이 앱에는 검증된 지진관측소 좌표 목록이 없으므로 주변 관측소 탐색은 위 공식 서비스에서 진행합니다. 자료 API의 공개 범위·사용 조건·코드 체계도 따로 확인하세요.</p>
+      <p class="guide-caution">관측소의 순간적인 큰 값은 주변 잡음이나 장비 영향일 수 있습니다. 지진조기경보도 발생 후 탐지한 정보를 활용하며 사전 예측과는 다릅니다. 이 앱은 흔들림·위험도를 직접 계산하거나 경보를 발령하지 않습니다.</p>
+      <p class="guide-source">출처: <a href="https://www.kma.go.kr/kma/biz/earthquake_volcano_02.jsp" target="_blank" rel="noopener noreferrer">기상청 지진·화산 관측</a> · <a href="https://neciseew.kma.go.kr/pews/man/m.html" target="_blank" rel="noopener noreferrer">사용자 맞춤형 지진정보서비스 도움말</a> · 확인일 2026-10-22</p>
+    </div>
+  </section>
   <div id="explorer" class="workspace">
     <aside class="panel search-panel"><div class="panel-heading"><span class="step-label"><b>02</b> 관측망·지점 선택</span></div>
-      <div class="network-tabs" role="group" aria-label="관측망 선택"><button data-network="ASOS" aria-pressed="true">ASOS</button><button data-network="AWS" aria-pressed="false">AWS</button><button data-network="GRID" aria-pressed="false">실황 격자</button></div>
+      <div class="network-tabs" role="group" aria-label="관측망 선택"><button data-network="ASOS" aria-pressed="true" aria-describedby="tooltip-ASOS">ASOS ⓘ</button><button data-network="AWS" aria-pressed="false" aria-describedby="tooltip-AWS">AWS ⓘ</button><button data-network="GRID" aria-pressed="false" aria-describedby="tooltip-GRID">격자 ⓘ</button>
+        <span id="tooltip-ASOS" class="network-tooltip" role="tooltip" hidden><strong>ASOS · 종관기상관측</strong>여러 지역의 날씨를 같은 시각 기준으로 살피는 관측망입니다. 기온·습도·바람·강수 등 다양한 요소를 관측합니다. 지점별 제공 요소와 시간을 확인하세요.</span>
+        <span id="tooltip-AWS" class="network-tooltip" role="tooltip" hidden><strong>AWS · 방재기상관측</strong>국지적인 비·바람 등 위험기상을 촘촘하게 살피는 자동관측망입니다. 가까운 지역의 상황을 탐구할 때 유용합니다. 습도 등 추가 요소의 제공 여부는 지점마다 다릅니다.</span>
+        <span id="tooltip-GRID" class="network-tooltip" role="tooltip" hidden><strong>격자 · 지역 실황과 예보</strong>관심지역을 약 5 km 격자의 nx, ny로 지정합니다. 실제 관측소가 아닙니다. 초단기실황은 현재 상황, 초단기·단기예보는 미래 상황을 살펴보는 자료입니다.</span>
+      </div>
       <div id="network-description" class="network-description"></div>
+      <div id="grid-service-picker" hidden><label for="grid-service">실황·예보 자료 종류</label><select id="grid-service"><option value="GRID">초단기실황 · 현재 상황</option><option value="GRID_FORECAST">단기예보 · 미래 바람·비</option><option value="GRID_ULTRA_FORECAST">초단기예보 · 가까운 미래</option></select><p id="grid-service-note" class="muted"></p></div>
       <div id="station-search"><label for="query">관측소 검색</label><div class="searchbox"><span aria-hidden="true">⌕</span><input id="query" type="search" placeholder="지점명, 번호, 지역 검색" autocomplete="off"></div><label class="sr-only" for="region">시도 필터</label><select id="region"><option value="">모든 시도</option></select><div class="result-heading"><span>검색 결과 <b id="result-count">0</b>개</span><button id="reset-search" class="text-button">초기화</button></div><div id="station-list" class="station-list" aria-label="관측소 목록"></div><button id="more" class="secondary more" hidden>50개 더 보기</button></div>
       <form id="grid-form" hidden><div class="callout">관측소가 아닌 <b>5 km 격자</b>입니다. 지도에서 위치를 누르거나 좌표를 입력하세요.</div><label for="latitude">위도 (°N)</label><input id="latitude" type="number" step="any" min="-89" max="89" placeholder="예: 37.5665" required><label for="longitude">경도 (°E)</label><input id="longitude" type="number" step="any" min="-180" max="180" placeholder="예: 126.9780" required><button type="submit" class="primary">격자 좌표 변환 →</button><p id="grid-error" role="alert" class="error"></p><p class="muted">국내 149 × 253 격자 영역만 변환합니다. 영역 안에서도 해상·미제공 격자에는 관측값이 없을 수 있습니다.</p></form>
     </aside>

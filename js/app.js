@@ -3,7 +3,7 @@ import {validateStations, filterStations} from './stations.js';
 import {requestParams, pythonCode} from './code-generator.js';
 
 const $ = id => document.getElementById(id);
-const state = {mode:'ASOS', disaster:'heat', selected:null, codeTab:'params', datasets:{}, services:{}, sources:{}, mapping:[], visible:[], limit:50, errors:{}};
+const state = {mode:'ASOS', gridService:'GRID', disaster:'heat', selected:null, codeTab:'params', datasets:{}, services:{}, sources:{}, mapping:[], visible:[], limit:50, errors:{}};
 const labels = {ASOS:'종관기상관측', AWS:'방재기상관측', GRID:'초단기실황 격자'};
 let map, markers, selectedMarker, gridMarker, toastTimer;
 
@@ -62,24 +62,33 @@ function renderDisasters() {
   $('disasters').replaceChildren(...state.mapping.map(d => {
     const b = node('button'); b.append(node('span',d.symbol), document.createTextNode(d.name));
     b.setAttribute('aria-pressed',String(state.disaster === d.id));
-    b.addEventListener('click', () => {state.disaster=d.id; renderDisasters();}); return b;
+    b.addEventListener('click', () => {
+      const enteringTyphoon = d.id === 'typhoon' && state.disaster !== 'typhoon';
+      state.disaster=d.id; renderDisasters();
+      if (enteringTyphoon) {state.gridService='GRID_FORECAST';switchNetwork('GRID');}
+    }); return b;
   }));
   const d = state.mapping.find(x=>x.id===state.disaster);
   if (!d) return;
   $('elements').textContent = d.elements.join(' · ');
   $('disaster-note').textContent = d.note;
-  $('phenomenon').hidden = !d.phenomenon; $('explorer').hidden = Boolean(d.phenomenon);
+  $('phenomenon').hidden = !d.phenomenon; $('explorer').hidden = d.id === 'earthquake';
+  $('typhoon-guide').hidden = d.id !== 'typhoon';
+  $('earthquake-guide').hidden = d.id !== 'earthquake';
   if (d.phenomenon) {
-    $('phenomenon-title').textContent = `${d.name}의 위치는 현상 정보입니다`;
+    $('phenomenon-title').textContent = d.title || `${d.name} 자료 선택 안내`;
     $('phenomenon-note').textContent = d.note;
     $('phenomenon-link').href = d.url;
-  } else if (map) { requestAnimationFrame(() => map.invalidateSize()); }
+    $('phenomenon-link').textContent = d.id === 'earthquake' ? '주변 관측소·지역 진도 확인 ↗' : '태풍 중심·진로 확인 ↗';
+  }
+  if (d.id !== 'earthquake' && map) { requestAnimationFrame(() => map.invalidateSize()); }
 }
 function switchNetwork(mode) {
   state.mode = mode; state.limit = 50; clearSelection();
   document.querySelectorAll('[data-network]').forEach(b => b.setAttribute('aria-pressed',String(b.dataset.network === mode)));
   const grid = mode === 'GRID';
   $('station-search').hidden = grid; $('grid-form').hidden = !grid;
+  $('grid-service-picker').hidden = !grid;
   $('network-description').textContent = grid ? '예보구역의 대표 실황 자료 · 관측소 번호 대신 nx, ny 사용' :
     mode === 'ASOS' ? '종관기상관측 · 전국 지점정보에서 탐색' : '방재기상관측 · 전국 자동관측 지점정보에서 탐색';
   $('map-label').textContent = grid ? '위치를 선택해 격자로 변환' : `${mode} 관측소`;
@@ -97,7 +106,22 @@ function switchNetwork(mode) {
   } else {
     $('latitude').value=''; $('longitude').value='';
     if (map) map.setView([36.1,127.8],7);
+    updateGridService();
   }
+}
+function currentService() {return state.services[state.mode==='GRID' ? state.gridService : state.mode];}
+function updateGridService() {
+  $('grid-service').value = state.gridService;
+  const forecast = state.gridService !== 'GRID';
+  const note = state.gridService === 'GRID_FORECAST'
+    ? '미래 예보 · WSD(풍속), VEC(풍향), PCP(1시간 강수량), POP(강수확률). 발표시각과 예보 대상 시각을 구분하세요.'
+    : state.gridService === 'GRID_ULTRA_FORECAST'
+      ? '가까운 미래 예보 · WSD(풍속), VEC(풍향), RN1(1시간 강수량). 초단기실황과 달리 fcstValue를 사용합니다.'
+      : '현재 상황 · T1H(기온), REH(습도), WSD(풍속), VEC(풍향), RN1(1시간 강수량). obsrValue를 사용합니다.';
+  $('grid-service-note').textContent=note;
+  $('network-description').textContent=forecast ? '지역별 미래 예보 · 관측소 번호 대신 nx, ny 사용' : '예보구역의 대표 실황 자료 · 관측소 번호 대신 nx, ny 사용';
+  $('map-label').textContent=forecast ? '예보를 확인할 지역의 격자 선택' : '현재 실황을 확인할 지역의 격자 선택';
+  renderDetails();
 }
 function updateResults(fit=false) {
   state.visible = filterStations(state.datasets[state.mode] || [], $('query').value, $('region').value);
@@ -179,14 +203,18 @@ function renderDetails() {
   }));
   $('copy-id').textContent=grid ? 'nx, ny 복사' : '지점번호 복사';
   document.querySelector('.element-warning').textContent=grid ? '격자 번호는 관측소 지점번호가 아닙니다. 자료가 없는 격자도 있습니다.' : '관측 요소 제공 여부는 지점·서비스별로 확인해야 합니다.';
-  const service=state.services[state.mode];
-  $('api-service').replaceChildren(node('option',service?.name || '검증된 API 명세 없음'));
+  const service=currentService();
+  const options=grid ? ['GRID','GRID_FORECAST','GRID_ULTRA_FORECAST'] : [state.mode];
+  $('api-service').replaceChildren(...options.map(key=>{
+    const option=node('option',state.services[key]?.name || '검증된 API 명세 없음');option.value=key;return option;
+  }));
+  $('api-service').value=grid ? state.gridService : state.mode;
   $('api-docs').hidden=!service?.docs;
   if(service?.docs) $('api-docs').href=service.docs;
   renderCode();
 }
 function renderCode() {
-  const service=state.services[state.mode];
+  const service=currentService();
   const params=requestParams(state.mode,state.selected,service);
   $('tab-params').setAttribute('aria-pressed',String(state.codeTab==='params'));
   $('tab-python').setAttribute('aria-pressed',String(state.codeTab==='python'));
@@ -234,7 +262,25 @@ async function init() {
   if(failures.length){$('load-status').classList.add('error');$('load-status').textContent=`일부 자료를 불러오지 못했습니다: ${failures.join(', ')}. 새로고침하거나 저장소의 JSON 파일을 확인해 주세요.`;}
   renderDisasters(); renderSources(); switchNetwork('ASOS');
 }
-document.querySelectorAll('[data-network]').forEach(b=>b.addEventListener('click',()=>switchNetwork(b.dataset.network)));
+function hideTooltips() {document.querySelectorAll('.network-tooltip').forEach(t=>t.hidden=true);}
+document.querySelectorAll('[data-network]').forEach(b=>{
+  const show=()=>{hideTooltips();$(`tooltip-${b.dataset.network}`).hidden=false;};
+  b.addEventListener('click',()=>{switchNetwork(b.dataset.network);show();});
+  b.addEventListener('mouseenter',show);b.addEventListener('focus',show);
+  b.addEventListener('blur',hideTooltips);
+});
+document.querySelector('.network-tabs').addEventListener('mouseleave',hideTooltips);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')hideTooltips();});
+document.addEventListener('pointerdown',e=>{if(!e.target.closest('.network-tabs'))hideTooltips();});
+$('grid-service').addEventListener('change',()=>{state.gridService=$('grid-service').value;updateGridService();});
+$('api-service').addEventListener('change',()=>{if(state.mode==='GRID'){state.gridService=$('api-service').value;updateGridService();}});
+$('typhoon-forecast').addEventListener('click',()=>{
+  state.gridService='GRID_FORECAST';switchNetwork('GRID');
+  $('explorer').scrollIntoView({block:'start'});$('latitude').focus({preventScroll:true});
+});
+$('typhoon-observation').addEventListener('click',()=>{
+  switchNetwork('AWS');$('explorer').scrollIntoView({block:'start'});$('query').focus({preventScroll:true});
+});
 $('query').addEventListener('input',()=>{state.limit=50;updateResults();});
 $('region').addEventListener('change',()=>{state.limit=50;updateResults(true);});
 $('reset-search').addEventListener('click',()=>{$('query').value='';$('region').value='';state.limit=50;updateResults(true);});
