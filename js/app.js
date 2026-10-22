@@ -269,7 +269,11 @@ document.querySelectorAll('[data-network]').forEach(b=>{
   b.addEventListener('mouseenter',show);b.addEventListener('focus',show);
   b.addEventListener('blur',hideTooltips);
 });
-document.querySelector('.network-tabs').addEventListener('mouseleave',hideTooltips);
+document.querySelector('.network-tabs').addEventListener('mouseleave',()=>{
+  const focused=document.activeElement;
+  hideTooltips();
+  if(focused?.matches('[data-network]')) $(`tooltip-${focused.dataset.network}`).hidden=false;
+});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')hideTooltips();});
 document.addEventListener('pointerdown',e=>{if(!e.target.closest('.network-tabs'))hideTooltips();});
 $('grid-service').addEventListener('change',()=>{state.gridService=$('grid-service').value;updateGridService();});
