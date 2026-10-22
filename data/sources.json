@@ -1,0 +1,40 @@
+{
+  "ASOS": {
+    "dataset": "ASOS 관측지점정보",
+    "provider": "기상청 국가기후데이터센터",
+    "url": "https://data.kma.go.kr/tmeta/stn/selectStnList.do?pgmNo=123",
+    "downloadUrl": "https://data.kma.go.kr/tmeta/stn/selectStnListDownload.do",
+    "classification": "SFC01",
+    "collectedAt": "2026-10-22",
+    "updatedAt": "2026-10-22",
+    "referenceDate": "2026-10-22",
+    "referenceDateMeaning": "원본 제공기관의 별도 기준일은 미표기. 수집일 기준 유효 이력을 선택.",
+    "count": 97,
+    "originalRows": 148,
+    "excludedHistoricalRows": 51,
+    "originalSha256": "6be25ca2d0f1cbe639685fc819b2c38d062ed69702791b71fd7fe1d2dd6b9d2d",
+    "coverage": "national",
+    "sample": false,
+    "transform": "CP949/UTF-8 CSV; 지점→문자열 id, 지점명→name, 위도/경도→숫자, 주소 첫 토큰→region. 시작일≤기준일<종료일(공란은 종료 없음); 동일 번호의 최신 시작일 선택. 좌표 범위·상충 중복 검증.",
+    "limitations": "active는 원본 이력 유효성만 의미하며 실시간 운영·관측요소 제공을 보장하지 않습니다."
+  },
+  "AWS": {
+    "dataset": "AWS 관측지점정보",
+    "provider": "기상청 국가기후데이터센터",
+    "url": "https://data.kma.go.kr/tmeta/stn/selectStnList.do?pgmNo=123",
+    "downloadUrl": "https://data.kma.go.kr/tmeta/stn/selectStnListDownload.do",
+    "classification": "SFC02",
+    "collectedAt": "2026-10-22",
+    "updatedAt": "2026-10-22",
+    "referenceDate": "2026-10-22",
+    "referenceDateMeaning": "원본 제공기관의 별도 기준일은 미표기. 수집일 기준 유효 이력을 선택.",
+    "count": 606,
+    "originalRows": 2619,
+    "excludedHistoricalRows": 2013,
+    "originalSha256": "00424ecbd1aeb7a1e51246817f6650473bfd8c15a9df4cc638453d1bf200e76a",
+    "coverage": "national",
+    "sample": false,
+    "transform": "CP949/UTF-8 CSV; 지점→문자열 id, 지점명→name, 위도/경도→숫자, 주소 첫 토큰→region. 시작일≤기준일<종료일(공란은 종료 없음); 동일 번호의 최신 시작일 선택. 좌표 범위·상충 중복 검증.",
+    "limitations": "active는 원본 이력 유효성만 의미하며 실시간 운영·관측요소 제공을 보장하지 않습니다."
+  }
+}

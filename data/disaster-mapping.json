@@ -1,0 +1,7 @@
+[
+  {"id":"heat","name":"폭염","symbol":"☀","elements":["기온","상대습도"],"note":"기온·습도로 현재 상황을 탐구합니다. 체감온도 계산에는 공식 산식과 적용 조건 확인이 필요합니다."},
+  {"id":"rain","name":"호우","symbol":"☂","elements":["강수량"],"note":"시간·일·누적 강수량은 서로 다릅니다. 자료의 누적 구간을 확인하세요."},
+  {"id":"wind","name":"강풍","symbol":"↗","elements":["풍속","풍향"],"note":"평균풍속과 순간최대풍속을 구분하세요. 관측소 주변 지형도 함께 고려하세요."},
+  {"id":"typhoon","name":"태풍","symbol":"◎","elements":["태풍 중심 위치","이동 경로"],"phenomenon":true,"note":"태풍 중심 위치·진로는 현상 위치 정보입니다. ASOS/AWS 지점번호로 선택하지 않습니다.","url":"https://www.weather.go.kr/w/typhoon/typ-info.do"},
+  {"id":"earthquake","name":"지진","symbol":"⌁","elements":["진앙 좌표","규모","발생시각"],"phenomenon":true,"note":"지진 발생 후의 진앙·규모·발생시각 정보입니다. 발생 시각·위치·규모를 사전에 정확히 예측하는 기능이 아닙니다.","url":"https://www.weather.go.kr/w/eqk-vol/recent-eqk.do"}
+]

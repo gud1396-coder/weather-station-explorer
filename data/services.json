@@ -1,0 +1,6 @@
+{
+  "ASOS":{"name":"기상청 API허브 · 지상 시간자료","endpoint":"https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php","stationParameter":"stn","timeParameter":"tm","keyParameter":"authKey","format":"text","docs":"https://apihub.kma.go.kr/apiList.do","verifiedAt":"2026-10-22"},
+  "AWS":{"name":"기상청 API허브 · AWS 매분자료","endpoint":"https://apihub.kma.go.kr/api/typ01/cgi-bin/url/nph-aws2_min","stationParameter":"stn","timeParameter":"tm2","keyParameter":"authKey","format":"text","docs":"https://apihub.kma.go.kr/apiList.do?seqApi=2&seqApiSub=239","verifiedAt":"2026-10-22"},
+  "GRID":{"name":"공공데이터포털 · 초단기실황조회","endpoint":"https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst","keyParameter":"ServiceKey","format":"json","docs":"https://www.data.go.kr/data/15084084/openapi.do","verifiedAt":"2026-10-22"},
+  "gridReference":"https://apihub.kma.go.kr/getAttachFile.do?fileName=%2820240305%29%EB%8F%99%EB%84%A4%EC%98%88%EB%B3%B4+%EA%B2%A9%EC%9E%90%EC%98%81%EC%97%AD+%EC%A0%95%EB%B3%B4.pdf"
+}
